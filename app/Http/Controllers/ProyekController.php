@@ -81,7 +81,7 @@ class ProyekController extends Controller
         
     }
 
-    public function delete(Request $request, Proyek $proyek){
+    public function delete(Proyek $proyek){
         $proyek->delete();
         return redirect()->intended('/dashboard/proyek/overview/');
 

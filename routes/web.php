@@ -40,7 +40,7 @@ Route::post('/auth', [UserController::class,'auth']);
         Route::get('/dashboard/proyek/overview/', [ProyekController::class, 'index']);
         Route::get('/dashboard/proyek/task/{proyek}', [UserController::class,'TaskShow']);
         Route::put('/task/update/{task}', [TaskController::class,'update']);
-        Route::delete('/dashboard/proyek/task/{proyek}', [UserController::class,'TaskShow']);
+        Route::delete('/task/delete/{task}', [TaskController::class,'delete']);
         Route::get('/dashboard/proyek/create',[ProyekController::class,'createView']);
         Route::get('/dashboard/proyek/detail/{project}',[ProyekController::class,'show']);
         Route::post('/create-task', [TaskController::class, 'create']);

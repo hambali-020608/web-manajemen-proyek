@@ -1,249 +1,185 @@
 <x-dashboard-layout>
     <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14">
-        <!-- Project Dropdown and Header -->
-        <div class="flex justify-between items-center mb-6">
-            <div class="relative inline-block text-left">
-                <button type="button" id="projectDropdownButton" class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white dark:hover:bg-gray-700">
+        <!-- Project Dropdown -->
+        <div class="relative inline-block text-left mb-6">
+            <div>
+                <button type="button" id="projectDropdownButton" class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white dark:hover:bg-gray-700" aria-expanded="true" aria-haspopup="true">
                     All Projects
-                    <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                         <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                     </svg>
                 </button>
-                <div id="projectDropdown" class="hidden origin-top-right absolute left-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-800 dark:ring-gray-600 z-50">
-                    <div class="py-1 max-h-96 overflow-y-auto">
-                        @foreach ($proyeks as $project)
-                        <a href="/dashboard/proyek/task/{{$project->id}}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700">
-                            {{$project->nama_proyek}}
-                        </a>
+            </div>
+
+            <!-- Dropdown panel -->
+            <div id="projectDropdown" class="hidden origin-top-right absolute left-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-800 dark:ring-gray-600 z-50">
+                <div class="py-1 max-h-96 overflow-y-auto" role="menu" aria-orientation="vertical" aria-labelledby="projectDropdownButton">
+                    <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
+                        <p class="text-sm font-medium text-gray-700 dark:text-gray-300">All Projects</p>
+                    </div>
+                    @foreach ($proyeks as $project)
+                    <a href="/dashboard/proyek/task/{{$project->id}}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700" role="menuitem">
+                        <div class="flex justify-between items-center">
+                            <span>{{$project->nama_proyek}}</span>
+                        </div>
+                    </a>
+                    @endforeach
+                    
+                </div>
+            </div>
+        </div>
+
+        <!-- All Tasks Header -->
+        <div class="mb-6 p-4 bg-gray-50 rounded-lg dark:bg-gray-800">
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">All Tasks</h1>
+            <div class="flex justify-end mt-4">
+                <button id="addTaskBtn" class="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    Tambah Task
+                </button>
+            </div>
+        </div>
+
+        <!-- All Tasks List -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            @foreach ($tasks as $task)
+            @php
+                $totalSubtasks = $task->sub_task->count();
+                $completedSubtasks = $task->sub_task->where('status_sub_task', 'completed')->count();
+                $progress = $totalSubtasks > 0 ? ($completedSubtasks / $totalSubtasks) * 100 : 0;
+            @endphp
+            <div class="p-6 bg-white rounded-lg border border-gray-200 shadow-sm dark:bg-gray-800 dark:border-gray-700">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{$task->nama_task}}</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{$task->proyek->nama_proyek}}</p>
+                    </div>
+                    <span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300">
+                        In Progress
+                    </span>
+                </div>
+                <div class="mt-4">
+                    <div class="flex justify-between text-sm mb-1">
+                        <span class="text-gray-500 dark:text-gray-400">Progress</span>
+                        <span class="font-medium text-gray-900 dark:text-white">{{$progress}}%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                        <div class="bg-blue-600 h-2.5 rounded-full" style="width: {{$progress}}%"></div>
+                    </div>
+                </div>
+                <div class="mt-4 flex space-x-2">
+                    <button class="detail-btn text-sm px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg dark:bg-gray-700 dark:hover:bg-gray-600" data-task="{{$task->id}}">
+                        Subtask
+                    </button>
+                    <button onclick="openEditModal()" class="detail-btn text-sm px-3 py-1 bg-blue-500 hover:bg-gray-200 rounded-lg dark:bg-gray-700 dark:hover:bg-gray-600" >
+                        Update Task 
+                    </button>
+                    {{-- <button class="text-sm px-3 py-1 bg-blue-100 hover:bg-blue-200 rounded-lg dark:bg-blue-900 dark:hover:bg-blue-800">
+                        Update
+                    </button> --}}
+                </div>
+                
+
+<!-- Edit Project Modal -->
+<div id="editTaskModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="mt-3 text-center">
+            <h3 class="text-lg leading-6 font-medium text-gray-900">Edit Project</h3>
+            <div class="mt-2 px-7 py-3">
+                <form id="editTaskForm" method="POST" action="/task/update/{{$task->id}}">
+                    @csrf
+                    @method('PUT')
+                    <div class="mb-4">
+                        <label for="editTaskName" class="block text-sm font-medium text-gray-700 mb-1 text-left">Task Name</label>
+                        <input type="text" id="editTaskName" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" name="nama_task"  value="{{old('nama_task',$task->nama_task)}}">
+                    </div>
+                    
+<div class="mb-4">
+    <label for="proyeks" class="blockx mb-2 text-sm font-medium text-gray-900 dark:text-white">Pilih Project</label>
+    <select id="proyeks" name="id_proyek" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+    @foreach ($proyeks as $proyek )
+    <option value="{{old('id_proyek',$task->proyek->id)}}">{{$proyek->nama_proyek}}</option>
+  
+    @endforeach
+    </select>
+</div>
+                    <div class="mb-4">
+                        <label for="editTaskDeadline" class="block text-sm font-medium text-gray-700 mb-1 text-left">Deadline</label>
+                        <input type="date" id="editTaskDeadline" name="deadline_task" value="{{old('deadline_task',$task->deadline_task)}}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                    </div>
+                    <div class="flex justify-end space-x-3 mt-4">
+                        <button type="button" id="cancelEditTaskBtn" onclick="this.closest('[id^=editTaskModal]').classList.add('hidden')"  class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">
+                            Cancel
+                        </button>
+                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                            Update Task
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{{-- edit project modal selesai --}}
+                            
+
+                <!-- Subtask Container (Hidden by default) -->
+                <div id="subtask-{{$task->id}}" class="hidden mt-4 border-t pt-4">
+                    <h4 class="text-md font-medium mb-2 dark:text-white">Subtask:</h4>
+                    <ul class="space-y-2">
+                        @foreach ($task->sub_task as $subtask)
+                        <li class="flex items-center">
+                            <span class="ml-2 text-sm dark:text-gray-300">{{$subtask->nama_sub_task}}</span>
+                        </li>
                         @endforeach
+                    </ul>
+                    <div class="mt-3 flex">
+                        <button class="add-subtask-btn flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg" data-task-id="{{$task->id}}">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                            </svg>
+                            Tambah SubTask
+                        </button>
                     </div>
                 </div>
             </div>
-            
-            <button id="addTaskBtn" class="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm">
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                </svg>
-                Add Task
-            </button>
-        </div>
-
-        <!-- Tasks Table -->
-        <div class="overflow-x-auto bg-white rounded-lg shadow dark:bg-gray-800">
-            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                <thead class="bg-gray-50 dark:bg-gray-700">
-                    <tr>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">
-                            Task Name
-                        </th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">
-                            Project
-                        </th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">
-                            Progress
-                        </th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">
-                            Status
-                        </th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">
-                            Deadline
-                        </th>
-                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">
-                            Actions
-                        </th>
-                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">
-                            Subtask
-                        </th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
-                    @foreach ($tasks as $task)
-                    @php
-                        $totalSubtasks = $task->sub_task->count();
-                        $completedSubtasks = $task->sub_task->where('status_sub_task', 'completed')->count();
-                        $progress = $totalSubtasks > 0 ? ($completedSubtasks / $totalSubtasks) * 100 : 0;
-                    @endphp
-                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-medium text-gray-900 dark:text-white">{{$task->nama_task}}</div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-500 dark:text-gray-400">{{$task->proyek->nama_proyek}}</div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="flex items-center">
-                                <div class="w-full bg-gray-200 rounded-full h-2.5 mr-2 dark:bg-gray-700">
-                                    <div class="bg-blue-600 h-2.5 rounded-full" style="width: {{$progress}}%"></div>
-                                </div>
-                                <span class="text-sm text-gray-500 dark:text-gray-400">{{round($progress)}}%</span>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                {{ $progress == 100 ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' }}">
-                                {{ $progress == 100 ? 'Completed' : 'In Progress' }}
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-500 dark:text-gray-400">
-                                {{ \Carbon\Carbon::parse($task->deadline_task)->format('M d, Y') }}
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        
-                            <button onclick="openEditModal(
-                                '{{$task->id}}', 
-                                '{{ addslashes($task->nama_task) }}', 
-                                '{{$task->proyek->id}}', 
-                                '{{$task->deadline_task}}'
-                            )" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
-                                Edit
-                            </button>
-                            <button onclick="openEditModal(
-                                '{{$task->id}}', 
-                                '{{ addslashes($task->nama_task) }}', 
-                                '{{$task->proyek->id}}', 
-                                '{{$task->deadline_task}}'
-                            )" class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800">
-                                Delete
-                            </button>
-                        </td>
-
-                        <td class="px-6 py-4 whitespace-nowrap justify-center">
-                            <button onclick="toggleSubtask({{$task->id}})" class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
-                                Open Subtasks
-                            </button>
-                        </td>
-                    </tr>
-
-
-                    <!-- Subtask Row -->
-                    <tr id="subtask-{{$task->id}}" class="hidden bg-gray-50 dark:bg-gray-700">
-                        <td colspan="6" class="px-6 py-4">
-                            <div class="flex justify-between items-center mb-2">
-                                <h4 class="text-sm font-medium text-gray-900 dark:text-white">Subtasks</h4>
-                                <button onclick="openAddSubtaskModal({{$task->id}})" class="flex items-center px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-xs">
-                                    <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                                    </svg>
-                                    Add Subtask
-                                </button>
-                            </div>
-                            <div class="overflow-x-auto">
-                                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
-                                    <thead class="bg-gray-100 dark:bg-gray-600">
-                                        <tr>
-                                            <th class="px-4 py-2 text-left text-xs text-gray-500 dark:text-gray-300">Name</th>
-                                            <th class="px-4 py-2 text-left text-xs text-gray-500 dark:text-gray-300">Assigned To</th>
-                                            <th class="px-4 py-2 text-left text-xs text-gray-500 dark:text-gray-300">Status</th>
-                                            <th class="px-4 py-2 text-left text-xs text-gray-500 dark:text-gray-300">Deadline</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($task->sub_task as $subtask)
-                                        <tr class="hover:bg-gray-100 dark:hover:bg-gray-600">
-                                            <td class="px-4 py-2 text-sm text-gray-700 dark:text-gray-300">{{$subtask->nama_sub_task}}</td>
-                                            <td class="px-4 py-2 text-sm text-gray-700 dark:text-gray-300">
-                                                @if($subtask->tukang)
-                                                <div class="flex items-center">
-                                                    <img class="w-6 h-6 rounded-full mr-2" src="https://ui-avatars.com/api/?name={{ urlencode($subtask->tukang->name) }}&background=random" alt="{{ $subtask->tukang->name }}">
-                                                    {{ $subtask->tukang->name }}
-                                                </div>
-                                                @else
-                                                Unassigned
-                                                @endif
-                                            </td>
-                                            <td class="px-4 py-2 text-sm">
-                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                                    {{ $subtask->status_sub_task == 'completed' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' }}">
-                                                    {{ ucfirst($subtask->status_sub_task) }}
-                                                </span>
-                                            </td>
-                                            <td class="px-4 py-2 text-sm text-gray-700 dark:text-gray-300">
-                                                {{ \Carbon\Carbon::parse($subtask->deadline_sub_task)->format('M d, Y') }}
-                                            </td>
-                                            
-                                        </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
+            @endforeach
         </div>
 
         <!-- Add Task Modal -->
         <div id="addTaskModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
             <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white dark:bg-gray-800">
                 <div class="mt-3 text-center">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Add New Task</h3>
+                    <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Tambah Task Baru</h3>
                     <div class="mt-2 px-7 py-3">
                         <form method="POST" action="/create-task">
                             @csrf
                             <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 text-left">Task Name</label>
-                                <input type="text" name="nama_task" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                                <label for="taskName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 text-left">Nama Task</label>
+                                <input type="text" id="taskName" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" name="nama_task" required>
                             </div>
                             <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 text-left">Project</label>
-                                <select name="id_proyek" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                                <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Pilih Proyek</label>
+                                <select id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" name="id_proyek" required>
                                     @foreach ($proyeks as $proyek)
                                     <option value="{{$proyek->id}}">{{$proyek->nama_proyek}}</option>
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 text-left">Deadline</label>
-                                <input type="datetime-local" name="deadline_task" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                            <div class="grid grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <label for="endDate" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 text-left">Deadline Task</label>
+                                    <input type="datetime-local" id="endDate" name="deadline_task" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" required>
+                                </div>
                             </div>
                             <div class="flex justify-end space-x-3 mt-4">
-                                <button type="button" onclick="document.getElementById('addTaskModal').classList.add('hidden')" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 dark:bg-gray-600 dark:text-white">
-                                    Cancel
+                                <button type="button" id="cancelTaskBtn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:text-white">
+                                    Batal
                                 </button>
                                 <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                                    Save
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Edit Task Modal -->
-        <div id="editTaskModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-            <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white dark:bg-gray-800">
-                <div class="mt-3 text-center">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Edit Task</h3>
-                    <div class="mt-2 px-7 py-3">
-                        <form id="editTaskForm" method="POST" action="">
-                            @csrf
-                            @method('PUT')
-                            <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 text-left">Task Name</label>
-                                <input type="text" id="editTaskName" name="nama_task" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
-                            </div>
-                            <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 text-left">Project</label>
-                                <select id="editTaskProject" name="id_proyek" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
-                                    @foreach ($proyeks as $proyek)
-                                    <option value="{{$proyek->id}}">{{$proyek->nama_proyek}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 text-left">Deadline</label>
-                                <input type="date" id="editTaskDeadline" name="deadline_task" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
-                            </div>
-                            <div class="flex justify-end space-x-3 mt-4">
-                                <button type="button" onclick="document.getElementById('editTaskModal').classList.add('hidden')" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 dark:bg-gray-600 dark:text-white">
-                                    Cancel
-                                </button>
-                                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                                    Update
+                                    Simpan
                                 </button>
                             </div>
                         </form>
@@ -256,34 +192,36 @@
         <div id="addSubTaskModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
             <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white dark:bg-gray-800">
                 <div class="mt-3 text-center">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Add New Subtask</h3>
+                    <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Tambah SubTask Baru</h3>
                     <div class="mt-2 px-7 py-3">
                         <form method="POST" action="/create-subtask">
                             @csrf
-                            <input type="hidden" id="subtaskTaskId" name="id_task">
+                            <input type="hidden" id="taskIdInput" name="id_task">
                             <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 text-left">Subtask Name</label>
-                                <input type="text" name="nama_sub_task" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                                <label for="subTaskName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 text-left">Nama SubTask</label>
+                                <input type="text" id="subTaskName" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" name="nama_sub_task" required>
                             </div>
                             <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 text-left">Assigned To</label>
-                                <select name="id_tukang" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                                    <option value="">Unassigned</option>
+                                <label for="tukangs" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Pilih Tukang</label>
+                                <select id="tukangs" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" name="id_tukang">
+                                    <option value="NULL" selected>Pilih Tukang</option>
                                     @foreach ($tukangs as $tukang)
                                     <option value="{{$tukang->id}}">{{$tukang->name}}</option>
-                                    @endforeach
-                                </select>
+                                    @endforeach    
+                                </select> 
                             </div>
-                            <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 text-left">Deadline</label>
-                                <input type="date" name="deadline_sub_task" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                            <div class="grid grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <label for="subTaskDeadline" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 text-left">Deadline SubTask</label>
+                                    <input type="date" id="subTaskDeadline" name="deadline_sub_task" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" required>
+                                </div>
                             </div>
                             <div class="flex justify-end space-x-3 mt-4">
-                                <button type="button" onclick="document.getElementById('addSubTaskModal').classList.add('hidden')" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 dark:bg-gray-600 dark:text-white">
-                                    Cancel
+                                <button type="button" id="cancelSubTaskBtn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:text-white">
+                                    Batal
                                 </button>
                                 <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                                    Save
+                                    Simpan
                                 </button>
                             </div>
                         </form>
@@ -313,36 +251,69 @@
             // Task Modal Toggle
             const addTaskBtn = document.getElementById('addTaskBtn');
             const addTaskModal = document.getElementById('addTaskModal');
+            const cancelTaskBtn = document.getElementById('cancelTaskBtn');
             
             addTaskBtn.addEventListener('click', function() {
                 addTaskModal.classList.remove('hidden');
             });
+            
+            cancelTaskBtn.addEventListener('click', function() {
+                addTaskModal.classList.add('hidden');
+            });
+
+            // Subtask Modal Toggle
+            const addSubTaskModal = document.getElementById('addSubTaskModal');
+            const cancelSubTaskBtn = document.getElementById('cancelSubTaskBtn');
+            const addSubTaskButtons = document.querySelectorAll('.add-subtask-btn');
+            
+            addSubTaskButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const taskId = this.getAttribute('data-task-id');
+                    document.getElementById('taskIdInput').value = taskId;
+                    addSubTaskModal.classList.remove('hidden');
+                });
+            });
+            
+            cancelSubTaskBtn.addEventListener('click', function() {
+                addSubTaskModal.classList.add('hidden');
+            });
+
+            // Subtask Toggle
+            const detailButtons = document.querySelectorAll('.detail-btn');
+            
+            detailButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const taskId = this.getAttribute('data-task');
+                    const subtaskContainer = document.getElementById(`subtask-${taskId}`);
+                    
+                    // Toggle visibility
+                    subtaskContainer.classList.toggle('hidden');
+                    
+                    // Change button text
+                    if (subtaskContainer.classList.contains('hidden')) {
+                        this.textContent = 'Subtask';
+                    } else {
+                        this.textContent = 'Sembunyikan';
+                    }
+                });
+            });
         });
 
-        function toggleSubtask(taskId) {
-            const subtaskRow = document.getElementById(`subtask-${taskId}`);
-            subtaskRow.classList.toggle('hidden');
-        }
+        function openEditModal() {
+    const modal = document.getElementById('editTaskModal');
+    const form = document.getElementById('editTaskForm');
+    
+    // Set form action
+    // form.action = `/projects/${id}`;
+    
+    // // Fill form fields
+    // document.getElementById('editProjectName').value = name;
+    // document.getElementById('editProjectClient').value = clientId;
+    // document.getElementById('editProjectDeadline').value = deadline.split(' ')[0]; // Format date properly
+    
+    // Show modal
+    modal.classList.remove('hidden');
+}
 
-        function openEditModal(taskId, taskName, projectId, deadline) {
-            const modal = document.getElementById('editTaskModal');
-            const form = document.getElementById('editTaskForm');
-            
-            // Update form action
-            form.action = `/task/update/${taskId}`;
-            
-            // Fill form fields
-            document.getElementById('editTaskName').value = taskName;
-            document.getElementById('editTaskProject').value = projectId;
-            document.getElementById('editTaskDeadline').value = deadline.split(' ')[0];
-            
-            modal.classList.remove('hidden');
-        }
-
-        function openAddSubtaskModal(taskId) {
-            const modal = document.getElementById('addSubTaskModal');
-            document.getElementById('subtaskTaskId').value = taskId;
-            modal.classList.remove('hidden');
-        }
     </script>
 </x-dashboard-layout>

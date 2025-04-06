@@ -43,4 +43,10 @@ class TaskController extends Controller
             return redirect()->intended("/dashboard/proyek/task");
             
     }
+
+    public function delete(Task $task){
+
+        $task->delete();
+        return redirect()->back();
+    }
 }
