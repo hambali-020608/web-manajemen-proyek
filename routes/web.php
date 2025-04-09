@@ -37,7 +37,7 @@ Route::get('/terima-proyek/{proyek}/{tukang}', [TukangController::class, 'terima
         // untuk karyawan yang superadmin
         Route::get('/dashboard/create-karyawan', [KaryawanController::class, 'create']);
         Route::post('/store-karyawan', [KaryawanController::class, 'store']);
-
+        
         // project
         Route::get('/dashboard/proyek/overview/{proyek}', [UserController::class, 'ProyekShow']);
         Route::delete('/proyek/delete/{proyek}', [ProyekController::class, 'delete']);
@@ -60,6 +60,7 @@ Route::get('/terima-proyek/{proyek}/{tukang}', [TukangController::class, 'terima
         // test project
         Route::get('/dashboard/testing', [ProyekController::class, 'testProyek']);
         Route::get('/dashboard/testing/proyek/{proyek}', [ProyekController::class, 'testProyekShow']);
+        Route::post('/add-test', [ProyekController::class, 'addTestProyek']);
         
         // inbox
         Route::get('/dashboard/chats/proyek/{proyek}', [ProyekController::class, 'getObrolansByProyek']);
@@ -74,6 +75,7 @@ Route::get('/terima-proyek/{proyek}/{tukang}', [TukangController::class, 'terima
         Route::post('/check-testing', [ProyekController::class, 'CheckQuality']);
         Route::post('/subtask/update-status',[SubTaskController::class,'updateStatus']);
         Route::post('/proyek-confirmation',[ProyekController::class,'confirmationProyeks']);
+        Route::post('/store-quality',[ProyekController::class,'StoreQuality']);
     });
 // Route::middleware(['role:karyawans'])->group(function () {
 //     Route::get('/dashboard-karyawan', [UserController::class, 'dashboardView']);

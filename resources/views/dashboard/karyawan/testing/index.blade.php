@@ -1,28 +1,43 @@
 <x-dashboard-layout>
     <div class="container mx-auto px-4 py-8 mt-5">
         <!-- Header -->
-        <div class="flex justify-between items-center mb-8">
-            <h1 class="text-3xl font-bold text-gray-800">Dashboard Pengujian Proyek</h1>
-            <div class="relative">
-                <button id="ProyekDropdownButton" class="flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd" />
+        <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-8 gap-4">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800">Dashboard Pengujian Proyek</h1>
+            </div>
+            
+            <div class="flex flex-col sm:flex-row gap-3">
+                <!-- Button Tambah Kualitas Pengujian -->
+                <button onclick="openModal('modal-tambah-kualitas')" 
+                        class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md shadow-sm text-sm font-medium flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
                     </svg>
-                    Pilih Proyek
+                    Tambah Kualitas Pengujian
                 </button>
                 
-                <div id="projectDropdown" class="hidden absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-10">
-                    <div class="py-1 max-h-96 overflow-y-auto">
-                        <div class="px-4 py-2 border-b border-gray-200">
-                            <p class="text-sm font-medium text-gray-700">Select Project</p>
-                        </div>
-                        @foreach ($proyeks as $project)
-                        <a href="/dashboard/testing/proyek/{{ $project->id }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                            <div class="flex justify-between items-center">
-                                <span>{{ $project->nama_proyek }}</span>
+                <!-- Dropdown Pilih Proyek -->
+                <div class="relative">
+                    <button id="ProyekDropdownButton" class="flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 w-full md:w-auto justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd" />
+                        </svg>
+                        Pilih Proyek
+                    </button>
+                    
+                    <div id="projectDropdown" class="hidden absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-10">
+                        <div class="py-1 max-h-96 overflow-y-auto">
+                            <div class="px-4 py-2 border-b border-gray-200">
+                                <p class="text-sm font-medium text-gray-700">Select Project</p>
                             </div>
-                        </a>
-                        @endforeach
+                            @foreach ($proyeks as $project)
+                            <a href="/dashboard/testing/proyek/{{ $project->id }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <div class="flex justify-between items-center">
+                                    <span>{{ $project->nama_proyek }}</span>
+                                </div>
+                            </a>
+                            @endforeach
+                        </div>
                     </div>
                 </div>
             </div>
@@ -51,15 +66,22 @@
                             <div>
                                 <h3 class="font-semibold text-lg text-gray-800">{{$proyek->nama_proyek}}</h3>
                             </div>
-                            <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">
-                                Active
-                            </span>
+                            <div class="flex space-x-2">
+                                <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">
+                                    Active
+                                </span>
+                                <!-- Tambah Pengujian Button -->
+                                <button onclick="openModal('modal-{{$proyek->id}}')" 
+                                        class="px-3 py-1 text-xs bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors">
+                                    + Tambah Pengujian
+                                </button>
+                            </div>
                         </div>
                     
                         <!-- Checklist Section -->
                         <div class="mt-4">
                             <h4 class="text-sm font-medium text-gray-700 mb-2">Checklist Kualitas Proyek</h4>
-                            <form action="/check-testing" method="post">
+                            <form action="/check-testing" method="POST">
                                 @csrf
                                 <div class="space-y-2">
                                     @foreach ($proyek->testProject as $testProject)
@@ -93,6 +115,44 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Modal for Tambah Pengujian -->
+                    <div id="modal-{{$proyek->id}}" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+                        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-lg font-semibold text-gray-800">Tambah Pengujian Baru</h3>
+                                <button onclick="closeModal('modal-{{$proyek->id}}')" class="text-gray-400 hover:text-gray-600">
+                                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <form action="/add-test" method="POST">
+                                @csrf
+                                <input type="hidden" name="proyek_id" value="{{$proyek->id}}">
+                                <div class="mb-4">
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Select Quality</label>
+                                    <select id="qualities" name="quality_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                        <option selected>Choose a Quality</option>
+                                        @foreach ($qualities as $quality)
+                                        <option value="{{$quality->id}}">{{$quality->quality_name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                
+                                <div class="flex justify-end space-x-3">
+                                    <button type="button" onclick="closeModal('modal-{{$proyek->id}}')"
+                                        class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                                        Batal
+                                    </button>
+                                    <button type="submit"
+                                        class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700">
+                                        Simpan
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                     @endforeach
                 </div>
             </div>
@@ -123,7 +183,41 @@
         </div>
     </div>
 
-    <!-- JavaScript for Checklist Functionality -->
+    <!-- Modal for Tambah Kualitas Pengujian -->
+    <div id="modal-tambah-kualitas" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold text-gray-800">Tambah Kualitas Pengujian Baru</h3>
+                <button onclick="closeModal('modal-tambah-kualitas')" class="text-gray-400 hover:text-gray-600">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <form action="/store-quality" method="POST" >
+                @csrf
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Nama Kualitas *</label>
+                    <input type="text" name="quality_name" required
+                        class="block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                        placeholder="Contoh: Kualitas Material">
+                </div>
+
+                <div class="flex justify-end space-x-3">
+                    <button type="button" onclick="closeModal('modal-tambah-kualitas')"
+                        class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                        Batal
+                    </button>
+                    <button type="submit"
+                        class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700">
+                        Simpan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Toggle project dropdown
@@ -174,5 +268,25 @@
                 });
             });
         });
+
+        // Modal functions
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            document.querySelectorAll('[id^="modal-"]').forEach(modal => {
+                if (event.target == modal) {
+                    closeModal(modal.id);
+                }
+            });
+        }
     </script>
 </x-dashboard-layout>

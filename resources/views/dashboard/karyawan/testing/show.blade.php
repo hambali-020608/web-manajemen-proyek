@@ -4,13 +4,24 @@
         {{-- {{dd($proyeks[0]->testProject[0]->quality->quality_name)}} --}}
         <div class="flex justify-between items-center mb-8">
             <h1 class="text-3xl font-bold text-gray-800">Dashboard Pengujian Proyek</h1>
+            <button onclick="openModal('modal-tambah-kualitas')" 
+            class="px-4  py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md shadow-sm text-sm font-medium flex items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+        </svg>
+        Tambah Kualitas Pengujian
+    </button>
+   
+            
             <div class="flex space-x-3">
+                
                 <button id="ProyekDropdownButton" class="flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd" />
                     </svg>
                     {{$proyek->nama_proyek}}
                 </button>
+
                 
 
             </div>
@@ -64,9 +75,14 @@
                             <div>
                                 <h3 class="font-semibold text-lg text-gray-800">{{$proyek->nama_proyek}}</h3>
                             </div>
-                            <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">
+                            {{-- <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">
                                 Active
-                            </span>
+                            </span> --}}
+                            <button onclick="openModal('modal-{{$proyek->id}}')" 
+                                class="px-3 py-1 text-xs bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors">
+                            + Tambah Pengujian
+                        </button>
+                           
                         </div>
                         
                         <!-- Checklist Section -->
@@ -80,18 +96,27 @@
                             @endphp
                                 <form action="/check-testing" method="post">
                                     @csrf
-                                @foreach ($proyek->testProject as $testProject)
-
-                                <div class="flex items-center {{$testProject->is_checked ? 'line-through' :''}}">
-                                    <input type="hidden" name="id_test" value="{{$testProject->id}}">
-                                    <input type="checkbox" name="is_checked" id="quality-1-1" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" {{$testProject->is_checked?'checked' :''}} >
-                                    <label for="quality-1-1" class="ml-2 text-sm text-gray-700">{{$testProject->quality->quality_name}}</label>
-                                    <span class="ml-auto text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-800">Wajib</span>
+                                    @foreach ($proyek->testProject as $testProject)
+                                    <div class="flex mb-2 items-center {{$testProject->is_checked ? 'line-through' : ''}}">
+                                        <input type="hidden" name="tests[{{$testProject->id}}][id]" value="{{$testProject->id}}">
+                                        <input type="checkbox" name="tests[{{$testProject->id}}][is_checked]" 
+                                               id="quality-{{$testProject->id}}" 
+                                               class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" 
+                                               {{$testProject->is_checked ? 'checked' : ''}}>
+                                        <label for="quality-{{$testProject->id}}" class="ml-2 text-sm text-gray-700">
+                                            {{$testProject->quality->quality_name}}
+                                        </label>
+                                        <span class="ml-auto text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-800">Wajib</span>
+                                    </div>
+                                    @endforeach
                                 </div>
-                                <button type="submit" class="px-2 py-2 bg-blue-400 rounded-lg mt-4">Simpan Perubahan</button>
-                                @endforeach
+                                <button type="submit" class="px-3 py-2 bg-blue-500 text-white rounded-lg mt-4 hover:bg-blue-600 transition-colors">
+                                    Simpan Perubahan
+                                </button>   
                             </form>
                             </div>
+
+
                             
                             <!-- Progress based on checklist -->
                             
@@ -107,13 +132,14 @@
                         </div>
                     </div>
 
+
                 
                     
                     <!-- Project 2 - With Checklist -->
                     
                 </div>
             </div>
-
+{{-- 
             <!-- Testing Status Card -->
             <div class="bg-white rounded-xl shadow-md p-6">
                 <h2 class="text-xl font-bold text-gray-800 mb-6">Status Pengujian</h2>
@@ -163,10 +189,10 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
             <!-- Monitoring Chart Card -->
-            <div class="lg:col-span-3 bg-white rounded-xl shadow-md p-6">
+            {{-- <div class="lg:col-span-3 bg-white rounded-xl shadow-md p-6">
                 <h2 class="text-xl font-bold text-gray-800 mb-6">Grafik Monitoring Checklist</h2>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -223,7 +249,79 @@
                         </div>
                     </div>
                 </div>
+            </div> --}}
+        </div>
+    </div>
+
+    
+                    <!-- Modal for Tambah Pengujian -->
+                    <div id="modal-{{$proyek->id}}" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+                        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-lg font-semibold text-gray-800">Tambah Pengujian Baru</h3>
+                                <button onclick="closeModal('modal-{{$proyek->id}}')" class="text-gray-400 hover:text-gray-600">
+                                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <form action="/add-test" method="POST">
+                                @csrf
+                                <input type="hidden" name="proyek_id" value="{{$proyek->id}}">
+                                <div class="mb-4">
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Select Quality</label>
+                                    <select id="qualities" name="quality_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                        <option selected>Choose a Quality</option>
+                                        @foreach ($qualities as $quality)
+                                        <option value="{{$quality->id}}">{{$quality->quality_name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                
+                                <div class="flex justify-end space-x-3">
+                                    <button type="button" onclick="closeModal('modal-{{$proyek->id}}')"
+                                        class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                                        Batal
+                                    </button>
+                                    <button type="submit"
+                                        class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700">
+                                        Simpan
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+    <!-- Modal for Tambah Kualitas Pengujian -->
+    <div id="modal-tambah-kualitas" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold text-gray-800">Tambah Kualitas Pengujian Baru</h3>
+                <button onclick="closeModal('modal-tambah-kualitas')" class="text-gray-400 hover:text-gray-600">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
             </div>
+            <form action="/store-quality" method="POST" >
+                @csrf
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Nama Kualitas *</label>
+                    <input type="text" name="quality_name" required
+                        class="block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                        placeholder="Contoh: Kualitas Material">
+                </div>
+
+                <div class="flex justify-end space-x-3">
+                    <button type="button" onclick="closeModal('modal-tambah-kualitas')"
+                        class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                        Batal
+                    </button>
+                    <button type="submit"
+                        class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700">
+                        Simpan
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -288,6 +386,17 @@
                 // In a real implementation, you might send this data to the server
                 console.log('Checklist updated - would send data to server in real implementation');
             }
+           
+
         });
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+        }
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+        }
+
     </script>
 </x-dashboard-layout>

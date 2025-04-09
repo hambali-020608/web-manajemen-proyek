@@ -8,8 +8,10 @@ use App\Models\ConfirmationProyek;
 use App\Models\Klien;
 use App\Models\Obrolan;
 use App\Models\Proyek;
+use App\Models\Quality;
 use App\Models\TestProject;
 use App\Models\Tukang;
+use GuzzleHttp\Handler\Proxy;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -154,36 +156,36 @@ public function obrolanIndex(){
 
     }
     public function testProyek(){
+        $qualities = Quality::all();
         $proyeks = Proyek::all();
         // $check_done = $proyeks->testProject()->where('is_checked',true)->count();
-        return view('dashboard.karyawan.testing.index',compact('proyeks'));
+        return view('dashboard.karyawan.testing.index',compact('proyeks','qualities'));
     }
-
+    
     public function testProyekShow(Proyek $proyek){
         $proyeks = Proyek::all();
+        $qualities = Quality::all();
         $check_done = $proyek->testProject()->where('is_checked',true)->count();
         $check_undone = $proyek->testProject()->where('is_checked',false)->count();
 
-        return view('dashboard.karyawan.testing.show',compact('proyek','check_done','check_undone','proyeks'));
+        return view('dashboard.karyawan.testing.show',compact('proyek','check_done','check_undone','proyeks','qualities'));
     }
 
     public function CheckQuality(Request $request){
-        $id_test = $request->id_test;
-        $is_checked = $request->is_checked == 'on' ? true : false;
-        // dd( $id_test,$is_checked);
-        
-        $TestProyek = TestProject::findOrFail($id_test);
+        $tests = $request->tests;
 
-            // Update atau ganti tukang
+        foreach ($tests as $test) {
+            $id_test = $test['id'];
+            $is_checked = isset($test['is_checked']) && $test['is_checked'] == 'on';
+    
+            $TestProyek = TestProject::findOrFail($id_test);
+    
             $TestProyek->update([
-                'is_checked'=>$is_checked
-                // 'status_sub_task' => 'pending' // Reset status jika perlu
+                'is_checked' => $is_checked
             ]);
-
-            return back()->with('success', 'Tukang berhasil ditugaskan ke subtask');
-            
-            
-            
+        }
+    
+        return back()->with('success', 'Tukang berhasil ditugaskan ke subtask');    
         }
         
         public function storeChat(Request $request){
@@ -252,6 +254,29 @@ public function obrolanIndex(){
     );
 
     return redirect()->back()->with('success', 'Status proyek berhasil diperbarui');
+}
+
+public function addTestProyek( Request $request){
+    TestProject::create([
+        'proyek_id'=>$request->proyek_id,
+        'quality_id'=>$request->quality_id,
+        
+    ]);
+
+    return redirect()->back();
+
+
+
+    
+
+
+}
+
+public function StoreQuality(Request $request){
+Quality::create([
+    'quality_name'=>$request->quality_name
+]);
+return redirect()->back();
 }
 
 }
