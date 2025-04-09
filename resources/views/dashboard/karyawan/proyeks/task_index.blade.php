@@ -100,7 +100,7 @@
     <label for="proyeks" class="blockx mb-2 text-sm font-medium text-gray-900 dark:text-white">Pilih Project</label>
     <select id="proyeks" name="id_proyek" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
     @foreach ($proyeks as $proyek )
-    <option value="{{old('id_proyek',$task->proyek->id)}}">{{$proyek->nama_proyek}}</option>
+    <option value="{{ $proyek->id }}" {{ $proyek->id == $task->proyek->id ? 'selected' : '' }}>{{$proyek->nama_proyek}}</option>
   
     @endforeach
     </select>

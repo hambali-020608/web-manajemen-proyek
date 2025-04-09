@@ -17,6 +17,7 @@
                             <p class="text-sm font-medium text-gray-700">Select Project</p>
                         </div>
                         @foreach ($proyeks as $project)
+                        
                         <a href="/dashboard/proyek/overview/{{ $project->id }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                             <div class="flex justify-between items-center">
                                 <span>{{ $project->nama_proyek }}</span>

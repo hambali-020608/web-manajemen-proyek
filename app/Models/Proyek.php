@@ -47,6 +47,12 @@ public function messages()
 public function testProject(){
     return $this->hasMany(TestProject::class,'proyek_id');
 }
+public function confirmation_proyek(){
+    return $this->hasOne(ConfirmationProyek::class,'proyek_id');
+}
+public function anggota(){
+    return $this->hasMany(Anggota::class,'proyek_id');
+}    
 
 
 }

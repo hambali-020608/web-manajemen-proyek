@@ -11,11 +11,9 @@
         <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
 
         <!-- Styles / Scripts -->
-        @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-            @vite(['resources/css/app.css', 'resources/js/app.js'])
-        @else
-            
-        @endif
+        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
     </head>
     <body class="bg-gray-50">
         <div class="flex min-h-screen w-full items-center justify-center px-6 py-12 lg:px-8">
@@ -39,9 +37,9 @@
                   <div>
                     <div class="flex items-center justify-between">
                       <label for="password" class="block text-sm/6 font-medium text-gray-900">Password</label>
-                      <div class="text-sm">
+                      {{-- <div class="text-sm">
                         <a href="#" class="font-semibold text-yellow-600 hover:text-yellow-500">Forgot password?</a>
-                      </div>
+                      </div> --}}
                     </div>
                     <div class="mt-2">
                       <input type="password" name="password" id="password" autocomplete="current-password" required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
@@ -53,10 +51,7 @@
                   </div>
                 </form>
             
-                <p class="mt-10 text-center text-sm/6 text-gray-500">
-                  Not a member?
-                  <a href="#" class="font-semibold text-yellow-600 hover:text-yellow-500">Start a 14 day free trial</a>
-                </p>
+              
               </div>
             </div>
           </div>

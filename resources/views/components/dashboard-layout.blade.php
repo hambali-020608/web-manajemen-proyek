@@ -11,9 +11,12 @@
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600,700" rel="stylesheet" />
 
     <!-- Styles / Scripts -->
-    @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
+    {{-- @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @else
+    @else --}}
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -43,7 +46,7 @@
             }
         }
     </script>
-    @endif
+    {{-- @endif --}}
 </head>
 <body class="bg-gray-50 font-sans">
     <nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200">
@@ -62,7 +65,7 @@
                 </div>
                 <div class="flex items-center gap-4">
                     <div class="relative">
-                        <button type="button" onclick="window.location.href = '/dashboard/chats/proyek/1'" class="p-2 text-gray-500 rounded-lg hover:bg-gray-100">
+                        <button type="button" onclick="window.location.href = '/dashboard/chats/'" class="p-2 text-gray-500 rounded-lg hover:bg-gray-100">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                             </svg>
@@ -70,37 +73,23 @@
                         </button>
                         <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
                     </div>
-                    <div class="flex items-center">
-                        <div>
-                            <button type="button" class="flex text-sm bg-gray-100 rounded-full focus:ring-4 focus:ring-gray-300" aria-expanded="false" data-dropdown-toggle="dropdown-user">
-                                <span class="sr-only">Open user menu</span>
-                                <div class="w-8 h-8 rounded-full bg-primary-500 flex items-center justify-center text-white font-medium">US</div>
-                            </button>
-                        </div>
-                        @auth
-                        <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow" id="dropdown-user">
-                            <div class="px-4 py-3" role="none">
-                                <p class="text-sm text-gray-900 font-medium" role="none">
-                                    {{auth('karyawans')->user()->name}}
-                                </p>
-                                <p class="text-sm text-gray-500 truncate" role="none">
-                                    user@example.com
-                                </p>
+                    <div class="flex items-center relative">
+                        <button id="user-menu-button" type="button" class="flex text-sm bg-gray-100 rounded-full focus:ring-4 focus:ring-gray-300">
+                            <span class="sr-only">Open user menu</span>
+                            <div class="w-8 h-8 rounded-full bg-primary-500 flex items-center justify-center text-white font-medium">US</div>
+                        </button>
+                    
+                        <div id="dropdown-user" class="absolute hidden top-10 right-0 z-50  mt-2 w-48 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow">
+                            <div class="px-4 py-3">
+                                {{-- <p class="text-sm font-medium text-gray-900">{{ auth()->user()->name }}</p> --}}
+                                <p class="text-sm text-gray-500 truncate">user@example.com</p>
                             </div>
-                            <ul class="py-1" role="none">
-                                <li>
-                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Profile</a>
-                                </li>
-                                <li>
-                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Settings</a>
-                                </li>
-                                <li>
-                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Sign out</a>
-                                </li>
+                            <ul class="py-1">
+                                {{-- <li><a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a></li>
+                                <li><a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a></li> --}}
+                                <li><a href="#" onclick="confirmLogout()" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Log out</a></li>
                             </ul>
                         </div>
-                        @endauth
-                        
                     </div>
                 </div>
             </div>
@@ -129,7 +118,14 @@
         </div>
     </aside>
     
-    <div class="p-4 sm:ml-64 pt-20">
+    <div class="p-4 sm:ml-64 pt-20 relative">
+        <div class="flex justify-end">
+            <form id="logout-form" action="{{ url('/logout') }}" method="GET" style="display: none;">
+                @csrf
+            </form>
+            
+            
+        </div>
         {{ $slot }}
     </div>
 
@@ -141,6 +137,15 @@
             menu.classList.toggle('hidden');
             icon.classList.toggle('rotate-180');
         });
+        document.getElementById('user-menu-button').addEventListener('click',function () {
+            const menu = document.getElementById('dropdown-user').classList.toggle('hidden'); 
+            
+        })
+        function confirmLogout() {
+                    if (confirm("Apakah Anda yakin ingin logout?")) {
+                        document.getElementById("logout-form").submit();
+                    }
+                }
     </script>
 </body>
 </html>

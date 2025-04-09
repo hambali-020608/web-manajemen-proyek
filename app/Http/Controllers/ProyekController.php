@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\TukangNotifikasi;
+use App\Models\Anggota;
+use App\Models\ConfirmationProyek;
 use App\Models\Klien;
 use App\Models\Obrolan;
 use App\Models\Proyek;
@@ -9,6 +12,7 @@ use App\Models\TestProject;
 use App\Models\Tukang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class ProyekController extends Controller
 {
@@ -30,21 +34,34 @@ class ProyekController extends Controller
     }
 
     public function store(Request $request){
+        
+        $tukangIds = $request->input('tukang_id', []);
+        
+        
         $nama_proyek = $request->nama_proyek;
         $tanggal_mulai=$request->tanggal_mulai;
         $deadline_proyek= $request->deadline_proyek;
         $status_proyek = "pending";
         $id_klien = $request->id_klien;
 
-        Proyek::create([
+       $proyek =  Proyek::create([
             'nama_proyek' => $nama_proyek,
             'tanggal_mulai' => $tanggal_mulai,
             'deadline_proyek' => $deadline_proyek,
             'status_proyek' => $status_proyek,
             'id_klien' => $id_klien
         ]);
+        foreach($tukangIds as $tukangid){
+            $tukang = Tukang::find($tukangid);
+            Anggota::create([
+                'tukang_id' => $tukangid,
+                'proyek_id' => $proyek->id,
+                'status' => 'pending',
+            ]);
+            // Mail::to($tukang->email)->send(new TukangNotifikasi($proyek, $tukang));
+        }
 
-        return redirect()->intended('/dashboard/proyek/overview/1');
+        return redirect()->intended('/dashboard/proyek/overview/'.$proyek->id);
 
 
         
@@ -89,33 +106,41 @@ class ProyekController extends Controller
 
     public function createView(){
         $kliens = Klien::all();
-        return view('dashboard.karyawan.proyeks.create',compact('kliens'));
+        $tukangs = Tukang::all();
+        return view('dashboard.karyawan.proyeks.create',compact('kliens','tukangs'));
     }
 
     public function getObrolansByProyek(Proyek $proyek){
+        
         if(Auth::guard('karyawans')->check()){
             $projects = Proyek::all();
             $obrolans = $proyek->messages()->get();
-            return view('dashboard.karyawan.obrolans.index',compact('obrolans','projects','proyek'));
+            return view('dashboard.karyawan.obrolans.show',compact('obrolans','projects','proyek'));
         
 
         }
+
+    
         if(Auth::guard('tukangs')->check()){
             // $projects = Proyek::all();
             $obrolans = $proyek->messages()->get();
-            return view('dashboard.tukang.obrolans.index',compact('obrolans','proyek'));
+            return view('dashboard.tukang.obrolans.show',compact('obrolans','proyek'));
         
 
         }
         if(Auth::guard('kliens')->check()){
             // $projects = Proyek::all();
             $obrolans = $proyek->messages()->get();
-            return view('dashboard.klien.obrolans.index',compact('obrolans'));
+            return view('dashboard.klien.obrolans.',compact('obrolans'));
         
 
         }
+        
     }
-
+public function obrolanIndex(){
+    $projects = Proyek::all();
+    return view('dashboard.karyawan.obrolans.index',compact('projects'));
+}
     public function handOverShow(Proyek $proyek){
         $proyeks = Proyek::all();
         return view('dashboard.karyawan.handover.show',compact('proyek','proyeks'));
@@ -156,13 +181,13 @@ class ProyekController extends Controller
             ]);
 
             return back()->with('success', 'Tukang berhasil ditugaskan ke subtask');
-
-
-
-    }
-
-    public function storeChat(Request $request){
-        if(Auth::guard('karyawans')->check()){
+            
+            
+            
+        }
+        
+        public function storeChat(Request $request){
+            if(Auth::guard('karyawans')->check()){
             $user = Auth::guard('karyawans')->user();
             $proyek_id = $request->proyek_id;
             $message = $request->message;
@@ -207,5 +232,27 @@ class ProyekController extends Controller
 
         return redirect()->back();
     }
+    public function confirmationProyeks(Request $request)
+{
+    $request->validate([
+        'proyek_id' => 'required|exists:proyeks,id',
+        'status_confirmation' => 'required|in:accepted,rejected', // Sesuaikan dengan nilai yang diizinkan
+        'detail' => 'nullable|string'
+    ]);
+
+    // $proyek = Proyek::findOrFail($request->proyek_id);
+
+    // Gunakan updateOrCreate untuk one-to-one relationship
+    $confirmation = ConfirmationProyek::updateOrCreate(
+        ['proyek_id' => $request->proyek_id],
+        [
+            'status_confirmation' => $request->status_confirmation,
+            'detail' => $request->detail
+        ]
+    );
+
+    return redirect()->back()->with('success', 'Status proyek berhasil diperbarui');
+}
+
 }
 

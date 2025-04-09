@@ -29,6 +29,7 @@ class TaskController extends Controller
             'id_proyek'=>$id_proyek,
         
         ]);
+    
         return redirect()->intended("/dashboard/proyek/task/$id_proyek");
     }
     public function update(Request $request, Task $task){

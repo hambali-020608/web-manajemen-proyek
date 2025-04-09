@@ -4,6 +4,7 @@
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-bold text-gray-800">{{$selectedProject->nama_proyek}}</h1>
             <div class="relative">
+                {{-- {{dd($selectedProject->anggota)}} --}}
                 <button id="projectDropdownButton" class="inline-flex justify-between items-center w-64 px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 border border-gray-300 rounded-md shadow-sm">
                     {{ $selectedProject->nama_proyek }}
                     <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -19,7 +20,7 @@
                         <a href="/dashboard/proyek/overview" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 ">
                             <div class="flex justify-between items-center">
                                 <span>All Projects</span>
-                                    {{-- All Proyek --}}
+                                    
                                 
                             </div>
                         </a>
@@ -101,12 +102,10 @@
                 <h2 class="text-lg font-semibold text-gray-800">Task Proyek Overview</h2>
                 <div class="flex space-x-3">
                     <a href="/dashboard/proyek/detail/{{ $selectedProject->id }}" 
-                       class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm font-medium flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        View Project Details
-                    </a>
+                        class="text-white text-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium text-sm px-2 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 rounded-full">
+                         
+                         View Project Details
+                     </a>
 
                     <button onclick="openEditModal('{{ $selectedProject->id }}', '{{ $selectedProject->nama_proyek }}', '{{ $selectedProject->klien->id }}', '{{ $selectedProject->deadline_proyek }}')" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 rounded-full">
                         Edit Project
@@ -242,6 +241,11 @@
     </div>
 
     <script>
+        function confirmDelete() {
+                    if (confirm("Apakah Anda yakin ingin Delete Project ini?")) {
+                        document.getElementById("DeleteProjectForm").submit();
+                    }
+                }
         // Project dropdown toggle
         document.getElementById('projectDropdownButton').addEventListener('click', function() {
             const dropdown = document.getElementById('projectDropdown');

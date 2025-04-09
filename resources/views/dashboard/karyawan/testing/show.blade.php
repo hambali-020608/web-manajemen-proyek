@@ -20,6 +20,16 @@
                 <div class="px-4 py-2 border-b border-gray-200">
                     <p class="text-sm font-medium text-gray-700">Select Project</p>
                 </div>
+                <a href="/dashboard/testing" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 ">
+                    <div class="flex justify-between items-center">
+                        <span>All Proyek</span>
+                        {{-- @if($project->id == $selectedProject->id)
+                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
+                            Active
+                        </span>
+                        @endif --}}
+                    </div>
+                </a>
                 @foreach ($proyeks as $project)
                 <a href="/dashboard/testing/proyek/{{ $project->id }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 ">
                     <div class="flex justify-between items-center">

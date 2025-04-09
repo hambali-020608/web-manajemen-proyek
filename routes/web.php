@@ -4,6 +4,7 @@ use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\ProyekController;
 use App\Http\Controllers\SubTaskController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\TukangController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\CekKaryawan;
 use App\Models\SubTask;
@@ -12,6 +13,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [UserController::class,'login']);
 Route::get('/login', [UserController::class,'login']);
 Route::post('/auth', [UserController::class,'auth']);
+
+Route::get('/terima-proyek/{proyek}/{tukang}', [TukangController::class, 'terimaProyek'])
+    ->name('proyek.terima')
+    ->middleware('signed');
 // Route::middleware(['role:tukangs'])->group(function () {
 //     Route::get('/dashboard', [UserController::class, 'dashboardView']);
 // });
@@ -58,6 +63,8 @@ Route::post('/auth', [UserController::class,'auth']);
         
         // inbox
         Route::get('/dashboard/chats/proyek/{proyek}', [ProyekController::class, 'getObrolansByProyek']);
+        Route::get('/dashboard/chats/', [ProyekController::class, 'obrolanIndex']);
+
         Route::post('/store-chat', [ProyekController::class, 'storeChat']);
         
 
@@ -66,7 +73,8 @@ Route::post('/auth', [UserController::class,'auth']);
         Route::post('/assign-tukang', [SubTaskController::class, 'assignTukang']);
         Route::post('/check-testing', [ProyekController::class, 'CheckQuality']);
         Route::post('/subtask/update-status',[SubTaskController::class,'updateStatus']);
-});
+        Route::post('/proyek-confirmation',[ProyekController::class,'confirmationProyeks']);
+    });
 // Route::middleware(['role:karyawans'])->group(function () {
 //     Route::get('/dashboard-karyawan', [UserController::class, 'dashboardView']);
 // });
@@ -82,6 +90,7 @@ Route::post('/auth', [UserController::class,'auth']);
 Route::get('/register', function () {
     return view('welcome');
 });
+
 
 
 
