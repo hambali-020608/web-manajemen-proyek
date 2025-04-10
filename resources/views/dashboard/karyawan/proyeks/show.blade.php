@@ -1,5 +1,12 @@
 <x-dashboard-layout>
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    @if(session('success'))
+    <div class="mt-5 p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
+        <span class="font-medium">{{session('success')}}</span>
+      </div>    
+        
+    @endif
+    
         <!-- Project Selection Dropdown -->
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-bold text-gray-800">{{$selectedProject->nama_proyek}}</h1>

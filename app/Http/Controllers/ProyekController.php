@@ -63,7 +63,7 @@ class ProyekController extends Controller
             // Mail::to($tukang->email)->send(new TukangNotifikasi($proyek, $tukang));
         }
 
-        return redirect()->intended('/dashboard/proyek/overview/'.$proyek->id);
+        return redirect()->intended('/dashboard/proyek/overview/'.$proyek->id)->with('success','success to create a proyek');
 
 
         
@@ -263,7 +263,7 @@ public function addTestProyek( Request $request){
         
     ]);
 
-    return redirect()->back();
+    return redirect()->back()->with('success','Success to add the test');
 
 
 
@@ -276,7 +276,7 @@ public function StoreQuality(Request $request){
 Quality::create([
     'quality_name'=>$request->quality_name
 ]);
-return redirect()->back();
+return redirect()->back()->with('success_quality','Success to create a quality');
 }
 
 }

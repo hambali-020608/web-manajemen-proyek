@@ -138,7 +138,7 @@
                                 
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm text-gray-900">
-                                        <a href="/dashboard/proyek/detail/{{ $project->id }}" class="text-blue-600 hover:text-blue-800">{{ $project->nama_proyek }}</a>
+                                        <a href="/dashboard/proyek/overview/{{ $project->id }}" class="text-blue-600 hover:text-blue-800">{{ $project->nama_proyek }}</a>
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">

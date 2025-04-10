@@ -1,5 +1,19 @@
 <x-dashboard-layout>
     <div class="container mx-auto px-4 py-8 mt-5">
+        @if(session('success'))
+    <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
+        <span class="font-medium">{{session('success')}}</span>
+      </div>    
+        
+    @endif
+    
+    @if(session('success_quality'))
+    <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
+        <span class="font-medium">{{session('success_quality')}}</span>
+      </div>    
+        
+    @endif
+    
         <!-- Header -->
         <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-8 gap-4">
             <div>

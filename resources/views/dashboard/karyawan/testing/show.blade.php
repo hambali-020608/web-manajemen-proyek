@@ -21,9 +21,6 @@
                     </svg>
                     {{$proyek->nama_proyek}}
                 </button>
-
-                
-
             </div>
         </div>
         <div id="projectDropdown" class="hidden absolute right-0 mt-2 w-64 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-10">
