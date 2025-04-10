@@ -282,11 +282,16 @@
                             @endphp
                             <tr>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-gray-900">{{ $task->nama_task }}</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="">
+                                        <a href="/dashboard/task/detail/{{$task->id}}" class="text-blue-500 hover:text-blue-600">
+                                            {{ $task->nama_task }}
+                                            </a>
+
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm text-gray-900">
-                                        <a href="/dashboard/proyek/detail/{{ $project->id }}" class="text-blue-600 hover:text-blue-800">{{ $project->nama_proyek }}</a>
+                                        <a href="" class="">{{ $project->nama_proyek }}</a>
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">

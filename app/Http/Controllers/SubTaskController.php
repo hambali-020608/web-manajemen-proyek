@@ -24,7 +24,7 @@ class SubTaskController extends Controller
     
             ]);
 
-            return redirect()->intended('/dashboard/proyek/task');
+            return redirect()->back()->with('success_create_task','Success to create task');
           
         }
         

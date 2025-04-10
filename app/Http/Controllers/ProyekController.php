@@ -11,6 +11,7 @@ use App\Models\Proyek;
 use App\Models\Quality;
 use App\Models\TestProject;
 use App\Models\Tukang;
+use Database\Seeders\ProyekSeeder;
 use GuzzleHttp\Handler\Proxy;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -69,8 +70,9 @@ class ProyekController extends Controller
         
     }
     public function show(Proyek $project){
+        $proyeks= Proyek::all();
        
-        return view('dashboard.karyawan.proyeks.detail',compact('project'));
+        return view('dashboard.karyawan.proyeks.detail',compact('project','proyeks'));
 
         
     }

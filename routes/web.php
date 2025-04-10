@@ -68,7 +68,8 @@ Route::get('/terima-proyek/{proyek}/{tukang}', [TukangController::class, 'terima
 
         Route::post('/store-chat', [ProyekController::class, 'storeChat']);
         
-
+        Route::get('/dashboard/task/detail/{task}',[TaskController::class,'taskDetail']);
+        Route::put('/task/update-status',[TaskController::class,'updateStatus']);
         Route::post('/create-subtask', [SubTaskController::class, 'create']);
         Route::post('/create-proyek', [ProyekController::class, 'store']);
         Route::post('/assign-tukang', [SubTaskController::class, 'assignTukang']);
