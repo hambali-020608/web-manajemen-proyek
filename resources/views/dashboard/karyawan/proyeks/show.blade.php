@@ -10,6 +10,11 @@
             <span class="font-medium">{{session('success_delete')}}</span>
         </div>    
         @endif
+            @if(session('success'))
+        <div id="status-alert-delete" class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 transition-opacity duration-500 ease-out" role="alert">
+            <span class="font-medium">{{session('success')}}</span>
+        </div>    
+        @endif
         <!-- Project Selection Dropdown -->
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-bold text-gray-800">{{$selectedProject->nama_proyek}}</h1>

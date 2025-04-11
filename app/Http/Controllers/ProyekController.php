@@ -104,7 +104,7 @@ class ProyekController extends Controller
 
     public function delete(Proyek $proyek){
         $proyek->delete();
-        return redirect()->back()->with('success_delete','Success to delete the project');
+    return redirect()->intended('/dashboard/proyek/overview')->with('success_delete','Success to delete the project');
 
     }
 

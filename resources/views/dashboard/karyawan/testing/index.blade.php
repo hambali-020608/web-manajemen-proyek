@@ -106,17 +106,27 @@
                                 @csrf
                                 <div class="space-y-2">
                                     @foreach ($proyek->testProject as $testProject)
-                                    <div class="flex items-center {{$testProject->is_checked ? 'line-through' : ''}}">
+                                    <div class="flex items-center">
                                         <input type="hidden" name="tests[{{$testProject->id}}][id]" value="{{$testProject->id}}">
-                                        <input type="checkbox" name="tests[{{$testProject->id}}][is_checked]" 
-                                               id="quality-{{$testProject->id}}" 
-                                               class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" 
-                                               {{$testProject->is_checked ? 'checked' : ''}}>
-                                        <label for="quality-{{$testProject->id}}" class="ml-2 text-sm text-gray-700">
+                                        
+                                        <input 
+                                            type="checkbox" 
+                                            name="tests[{{$testProject->id}}][is_checked]" 
+                                            id="quality-{{$testProject->id}}" 
+                                            class="h-5 w-5 text-blue-600 bg-white border-black rounded focus:ring-blue-500" 
+                                            {{$testProject->is_checked ? 'checked' : ''}}
+                                        >
+                                        
+                                        <label 
+                                            for="quality-{{$testProject->id}}" 
+                                            class="ml-2 text-sm text-gray-700 {{$testProject->is_checked ? 'line-through' : ''}}"
+                                        >
                                             {{$testProject->quality->quality_name}}
                                         </label>
+                                        
                                         <span class="ml-auto text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-800">Wajib</span>
                                     </div>
+                                    
                                     @endforeach
                                 </div>
                                 <button type="submit" class="px-3 py-2 bg-blue-500 text-white rounded-lg mt-4 hover:bg-blue-600 transition-colors">
