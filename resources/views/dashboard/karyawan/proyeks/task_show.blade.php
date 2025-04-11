@@ -6,6 +6,54 @@
       </div>    
         
     @endif
+    @if(session('success_create_subtask'))
+
+    <div id="status-alert" class="mt-5 p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
+        <span class="font-medium">{{session('success_update_status')}}</span>
+      </div>    
+        
+    @endif
+
+    <div id="subtask-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+      <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+          <div class="mt-3 text-center">
+              <h3 class="text-lg font-medium text-gray-900">Tambah Subtask Baru</h3>
+              <form method="POST" action="/create-subtask" class="mt-4 space-y-4">
+                  @csrf
+                  <input type="hidden" name="id_task" value="{{$task->id}}">
+                  
+                  <div>
+                      <label for="nama_sub_task" class="block text-sm font-medium text-gray-700 mb-1">Nama Subtask</label>
+                      <input type="text" name="nama_sub_task" id="nama_sub_task" class="w-full px-3 py-2 border border-gray-300 rounded-md" required>
+                  </div>
+                  
+                  <div>
+                      <label for="id_tukang" class="block text-sm font-medium text-gray-700 mb-1">Ditugaskan ke</label>
+                      <select name="id_tukang" id="id_tukang" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                          <option value="">Pilih Tukang</option>
+                          @foreach($tukangs as $tukang)
+                              <option value="{{$tukang->id}}">{{$tukang->name}}</option>
+                          @endforeach
+                      </select>
+                  </div>
+                  
+                  <div>
+                      <label for="deadline_sub_task" class="block text-sm font-medium text-gray-700 mb-1">Deadline</label>
+                      <input type="date" name="deadline_sub_task" id="deadline_sub_task" class="w-full px-3 py-2 border border-gray-300 rounded-md" required>
+                  </div>
+                  
+                  <div class="flex justify-end space-x-3 pt-4">
+                      <button type="button" onclick="closeSubtaskModal()" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">
+                          Batal
+                      </button>
+                      <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                          Simpan
+                      </button>
+                  </div>
+              </form>
+          </div>
+      </div>
+  </div>
    
     <div class="max-w-2xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
         <!-- Header -->
@@ -110,14 +158,14 @@
                 </tbody>
               </table>
             </div>
-            <button class="mt-4 flex items-center text-blue-600 hover:text-blue-800 text-sm">
+            <button onclick="openSubtaskModal()" class="mt-4 flex items-center text-blue-600 hover:text-blue-800 text-sm">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
               </svg>
               Tambah Subtask
             </button>
           </div>
-      
+    
           <!-- Actions -->
           <div class="pt-4 flex justify-end space-x-3 border-t border-gray-200">
 
@@ -145,5 +193,33 @@
       }, 3000);
     }
   });
+
+  document.addEventListener('DOMContentLoaded', function () {
+            const alertBox = document.getElementById('status-alert');
+            if (alertBox) {
+                setTimeout(() => {
+                    alertBox.style.transition = 'opacity 0.5s ease';
+                    alertBox.style.opacity = '0';
+                    setTimeout(() => alertBox.remove(), 500);
+                }, 3000);
+            }
+        });
+
+        // Fungsi untuk modal subtask
+        function openSubtaskModal() {
+            document.getElementById('subtask-modal').classList.remove('hidden');
+        }
+        
+        function closeSubtaskModal() {
+            document.getElementById('subtask-modal').classList.add('hidden');
+        }
+        
+        // Tutup modal saat klik di luar
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('subtask-modal');
+            if (event.target === modal) {
+                closeSubtaskModal();
+            }
+        });
       </script>
 </x-dashboard-layout>

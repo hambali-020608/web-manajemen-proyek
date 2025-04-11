@@ -24,7 +24,7 @@ class SubTaskController extends Controller
     
             ]);
 
-            return redirect()->back()->with('success_create_task','Success to create task');
+            return redirect()->back()->with('success_create_subtask','Success to create subtask');
           
         }
         

@@ -29,11 +29,6 @@
                     </a>
                 </li>
                 
-                <li>
-                    <a href="/dashboard/proyek/create" class="flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 pl-8">
-                        <span>Create Project</span>
-                    </a>
-                </li>
                 
                 
                 <li>

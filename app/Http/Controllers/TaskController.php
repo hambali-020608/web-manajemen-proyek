@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Proyek;
 use App\Models\Task;
+use App\Models\Tukang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request as FacadesRequest;
@@ -18,7 +19,8 @@ class TaskController extends Controller
 
     }
     public function taskDetail(Task $task){
-        return view('dashboard.karyawan.proyeks.task_show',compact('task'));
+        $tukangs = Tukang::all();
+        return view('dashboard.karyawan.proyeks.task_show',compact('task','tukangs'));
     }
     public function create(Request $request){
         
