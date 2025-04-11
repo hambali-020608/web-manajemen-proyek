@@ -96,7 +96,7 @@ class ProyekController extends Controller
         ]);
         
         
-        return redirect()->intended('/dashboard/proyek/overview/');
+        return redirect()->back()->with('success_edit','Success to edit projects');
 
 
         
@@ -104,7 +104,7 @@ class ProyekController extends Controller
 
     public function delete(Proyek $proyek){
         $proyek->delete();
-        return redirect()->intended('/dashboard/proyek/overview/');
+        return redirect()->back()->with('success_delete','Success to delete the project');
 
     }
 
@@ -175,7 +175,6 @@ public function obrolanIndex(){
 
     public function CheckQuality(Request $request){
         $tests = $request->tests;
-
         foreach ($tests as $test) {
             $id_test = $test['id'];
             $is_checked = isset($test['is_checked']) && $test['is_checked'] == 'on';
@@ -187,7 +186,7 @@ public function obrolanIndex(){
             ]);
         }
     
-        return back()->with('success', 'Tukang berhasil ditugaskan ke subtask');    
+        return back()->with('success_check', 'Tugas berhasil di checklist');    
         }
         
         public function storeChat(Request $request){

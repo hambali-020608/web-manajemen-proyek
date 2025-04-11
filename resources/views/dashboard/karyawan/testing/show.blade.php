@@ -1,4 +1,24 @@
 <x-dashboard-layout>
+    @if(session('success'))
+    <div id="status-alert-test"  class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
+        <span class="font-medium">{{session('success')}}</span>
+      </div>    
+        
+    @endif
+    
+    @if(session('success_quality'))
+    <div id="status-alert-quality" class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
+        <span class="font-medium">{{session('success_quality')}}</span>
+      </div>    
+        
+    @endif
+    
+    @if(session('success_check'))
+    <div id="status-alert-check" class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
+        <span class="font-medium">{{session('success_check')}}</span>
+      </div>    
+        
+    @endif
     <div class="container mx-auto px-4 py-8">
         <!-- Header -->
         {{-- {{dd($proyeks[0]->testProject[0]->quality->quality_name)}} --}}
@@ -88,7 +108,8 @@
                             <div class="space-y-2">
                                 @php
                                  $totalTest = $proyek->testProject->count();
-                                 $progress_test = $check_done > 0 ? ($totalTest / $check_done) * 100: 0 ;
+                                 
+                                 $progress_test = $check_done > 0 ? ($check_done / $totalTest ) * 100: 0 ;
                                 //  dd($progress_test);
                             @endphp
                                 <form action="/check-testing" method="post">
@@ -130,7 +151,7 @@
                     </div>
 
 
-                
+                {{-- {{dd($check_done)}} --}}
                     
                     <!-- Project 2 - With Checklist -->
                     
@@ -339,6 +360,7 @@
                     const projectCard = this.closest('.border-gray-100');
                     const checklistItems = projectCard.querySelectorAll('input[type="checkbox"]');
                     const checkedItems = projectCard.querySelectorAll('input[type="checkbox"]:checked');
+
                     
                     // Calculate progress percentage
                     const progress = Math.round((checkedItems.length / checklistItems.length) * 100);
@@ -394,6 +416,22 @@
             document.getElementById(modalId).classList.add('hidden');
             document.body.classList.remove('overflow-hidden');
         }
+        document.addEventListener('DOMContentLoaded', function () {
+    const alertBoxQuality = document.getElementById('status-alert-quality');
+    const alertBoxTest = document.getElementById('status-alert-test');
+    const alertBoxCheck = document.getElementById('status-alert-check');
+    if (alertBoxQuality || alertBoxTest || alertBoxCheck) {
+    setTimeout(() => {
+      [alertBoxQuality, alertBoxTest, alertBoxCheck].forEach(alertBox => {
+        if (alertBox) {
+          alertBox.style.transition = 'opacity 0.5s ease';
+          alertBox.style.opacity = '0';
+          setTimeout(() => alertBox.remove(), 500);
+        }
+      });
+    }, 3000);
+  }
+      });
 
     </script>
 </x-dashboard-layout>

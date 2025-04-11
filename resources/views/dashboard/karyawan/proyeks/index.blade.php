@@ -1,4 +1,14 @@
 <x-dashboard-layout>
+    @if(session('success_edit'))
+<div id="status-alert-edit" class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 transition-opacity duration-500 ease-out" role="alert">
+    <span class="font-medium">{{session('success_edit')}}</span>
+</div>    
+@endif
+    @if(session('success_delete'))
+<div id="status-alert-delete" class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 transition-opacity duration-500 ease-out" role="alert">
+    <span class="font-medium">{{session('success_delete')}}</span>
+</div>    
+@endif
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <!-- Header and Project Selection -->
         <div class="flex justify-between items-center mb-6">
@@ -401,5 +411,18 @@ function confirmDelete() {
                         document.getElementById("DeleteProjectForm").submit();
                     }
                 }
+
+
+                document.addEventListener('DOMContentLoaded', function() {
+    const alertBoxEdit = document.getElementById('status-alert-edit');
+    if (alertBoxEdit) {
+        setTimeout(() => {
+            alertBoxEdit.style.opacity = '0';
+            setTimeout(() => {
+                alertBoxEdit.remove();
+            }, 500); // Waktu untuk transisi fade out selesai
+        }, 3000); // Alert akan mulai fade out setelah 3 detik
+    }
+});
     </script>
 </x-dashboard-layout>

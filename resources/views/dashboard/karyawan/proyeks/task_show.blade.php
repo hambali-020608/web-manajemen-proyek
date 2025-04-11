@@ -1,4 +1,12 @@
 <x-dashboard-layout>
+    @if(session('success_update_status'))
+
+    <div id="status-alert" class="mt-5 p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
+        <span class="font-medium">{{session('success_update_status')}}</span>
+      </div>    
+        
+    @endif
+   
     <div class="max-w-2xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
         <!-- Header -->
         <div class="bg-gradient-to-r bg-blue-600 px-6 py-5">
@@ -24,7 +32,7 @@
                     </select>
                 </form>
                 
-                <button class="text-white hover:text-blue-200">
+                <button onclick="history.back()" class="text-white hover:text-blue-200">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                   </svg>
@@ -126,5 +134,16 @@
         function submitStatusForm() {
           document.getElementById('status-form').submit();
         }
+        document.addEventListener('DOMContentLoaded', function () {
+    const alertBox = document.getElementById('status-alert');
+    if (alertBox) {
+      // Hilangkan elemen setelah 3 detik (3000ms)
+      setTimeout(() => {
+        alertBox.style.transition = 'opacity 0.5s ease';
+        alertBox.style.opacity = '0';
+        setTimeout(() => alertBox.remove(), 500); // Hapus dari DOM setelah fade out
+      }, 3000);
+    }
+  });
       </script>
 </x-dashboard-layout>

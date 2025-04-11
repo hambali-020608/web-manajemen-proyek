@@ -1,5 +1,13 @@
 <x-dashboard-layout>
     <div class="max-w-4xl mx-auto">
+        @if(session('success'))
+    
+        <div id="status-alert" class="mt-5 p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
+            <span class="font-medium">{{session('success')}}</span>
+          </div>    
+            
+        @endif
+       
         <!-- Project Header -->
         <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
             <div class="flex justify-between items-start mb-4">
@@ -174,6 +182,18 @@
             const dropdown = document.getElementById('projectDropdown');
             dropdown.classList.toggle('hidden');
         });
+
+    document.addEventListener('DOMContentLoaded', function () {
+    const alertBox = document.getElementById('status-alert');
+    if (alertBox) {
+      // Hilangkan elemen setelah 3 detik (3000ms)
+      setTimeout(() => {
+        alertBox.style.transition = 'opacity 0.5s ease';
+        alertBox.style.opacity = '0';
+        setTimeout(() => alertBox.remove(), 500); // Hapus dari DOM setelah fade out
+      }, 3000);
+    }
+  });
     </script>
 
 

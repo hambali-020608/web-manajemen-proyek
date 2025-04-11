@@ -1,4 +1,24 @@
 <x-dashboard-layout>
+    @if(session('success_task'))
+<div id="status-alert-edit" class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 transition-opacity duration-500 ease-out" role="alert">
+    <span class="font-medium">{{session('success_task')}}</span>
+</div>    
+@endif
+    @if(session('success_update_status'))
+<div id="status-alert-delete" class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 transition-opacity duration-500 ease-out" role="alert">
+    <span class="font-medium">{{session('success_update_status')}}</span>
+</div>    
+@endif
+    @if(session('success_update_task'))
+<div id="status-alert-delete" class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 transition-opacity duration-500 ease-out" role="alert">
+    <span class="font-medium">{{session('success_update_task')}}</span>
+</div>    
+@endif
+    @if(session('success_delete_task'))
+<div id="status-alert-delete" class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 transition-opacity duration-500 ease-out" role="alert">
+    <span class="font-medium">{{session('success_delete_task')}}</span>
+</div>    
+@endif
     @php
         $completedTasks = $project->task->where('status', 'completed')->count();
         $totalTasks = $project->task->count();

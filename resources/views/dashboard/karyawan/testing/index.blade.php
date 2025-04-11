@@ -1,15 +1,22 @@
 <x-dashboard-layout>
     <div class="container mx-auto px-4 py-8 mt-5">
         @if(session('success'))
-    <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
+    <div id="status-alert-test"  class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
         <span class="font-medium">{{session('success')}}</span>
       </div>    
         
     @endif
     
     @if(session('success_quality'))
-    <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
+    <div id="status-alert-quality" class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
         <span class="font-medium">{{session('success_quality')}}</span>
+      </div>    
+        
+    @endif
+    
+    @if(session('success_check'))
+    <div id="status-alert-check" class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
+        <span class="font-medium">{{session('success_check')}}</span>
       </div>    
         
     @endif
@@ -302,5 +309,22 @@
                 }
             });
         }
+
+        document.addEventListener('DOMContentLoaded', function () {
+    const alertBoxQuality = document.getElementById('status-alert-quality');
+    const alertBoxTest = document.getElementById('status-alert-test');
+    const alertBoxCheck = document.getElementById('status-alert-check');
+    if (alertBoxQuality || alertBoxTest || alertBoxCheck) {
+    setTimeout(() => {
+      [alertBoxQuality, alertBoxTest, alertBoxCheck].forEach(alertBox => {
+        if (alertBox) {
+          alertBox.style.transition = 'opacity 0.5s ease';
+          alertBox.style.opacity = '0';
+          setTimeout(() => alertBox.remove(), 500);
+        }
+      });
+    }, 3000);
+  }
+      });
     </script>
 </x-dashboard-layout>

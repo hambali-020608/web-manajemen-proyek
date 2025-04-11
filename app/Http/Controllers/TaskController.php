@@ -44,7 +44,7 @@ class TaskController extends Controller
             'deadline_task'=>$deadline_task,
             'id_proyek'=>$id_proyek,
             ]);
-            return redirect()->intended("/dashboard/proyek/task");
+            return redirect()->back()->with('success_update_task','Success to update task');
             
     }
     public function updateStatus(Request $request){
