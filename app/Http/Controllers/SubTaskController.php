@@ -33,15 +33,15 @@ class SubTaskController extends Controller
     public function updateStatus(Request $request){
         // dd($request);
         $id_subtask = $request->id_subtask;
-        $is_checked = $request->is_checked == 'on' ? 'completed' : 'pending';
+        $status_subtask = $request->status_subtask;
         $subtask = Subtask::findOrFail($id_subtask);
         // dd($id_subtask);
         $subtask->update([
-            'status_sub_task'=>$is_checked
+            'status_sub_task'=>$status_subtask
             // 'status_sub_task' => 'pending' // Reset status jika perlu
         ]);
         // $subtask->updateStatus($is_checked);
-        return redirect()->back()->with('success', 'Subtask berhasil di update');
+        return redirect()->back()->with('success_status_subtask', 'Subtask berhasil di update');
     }
 
     

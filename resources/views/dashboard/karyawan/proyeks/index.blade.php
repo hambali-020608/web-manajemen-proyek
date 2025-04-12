@@ -5,7 +5,7 @@
 </div>    
 @endif
     @if(session('success_delete'))
-<div id="status-alert-delete" class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 transition-opacity duration-500 ease-out" role="alert">
+<div id="status-alert-delete" class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 transition-opacity duration-500 ease-out" role="alert">
     <span class="font-medium">{{session('success_delete')}}</span>
 </div>    
 @endif
