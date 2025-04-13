@@ -1,21 +1,35 @@
 <x-dashboard-layout>
     <!-- Flash Messages -->
-    @if(session('success_task') || session('success_update_status') || session('success_update_task') || session('success_delete_task'))
-    <div id="status-alert" class="p-4 mb-4 text-sm rounded-lg transition-opacity duration-500 ease-out" role="alert"
-         @class([
-             'text-green-800 bg-green-50 dark:bg-gray-800 dark:text-green-400' => session('success_task'),
-             'text-yellow-800 bg-yellow-50 dark:bg-gray-800 dark:text-yellow-400' => session('success_update_status') || session('success_update_task'),
-             'text-red-800 bg-red-50 dark:bg-gray-800 dark:text-red-400' => session('success_delete_task')
-         ])>
-        <span class="font-medium">
-            {{ session('success_task') ?? 
-               session('success_update_status') ?? 
-               session('success_update_task') ?? 
-               session('success_delete_task') }}
-        </span>
-    </div>    
-    @endif
+    @php
+    $statusClass = '';
+    if (session('success_task') || session('success_create_subtask')) {
+        $statusClass = 'text-green-800 bg-green-50';
+    } elseif (session('success_update_status') || session('success_update_task')) {
+        $statusClass = 'text-yellow-800 bg-yellow-50 dark:bg-gray-800 dark:text-yellow-400';
+    } elseif (session('success_delete_task')) {
+        $statusClass = 'text-red-800 bg-red-50 dark:bg-gray-800 dark:text-red-400';
+    }
+    elseif (session('success_status_subtask')) {
+        $statusClass = 'text-yellow-800 bg-yellow-50 dark:bg-gray-800 dark:text-yellow-400';
+    }
 
+    $statusMessage = session('success_task') ??
+                     session('success_update_status') ??
+                     session('success_update_task') ??
+                     session('success_create_subtask') ??
+                     session('success_status_subtask') ??
+                     session('success_delete_task');
+@endphp
+
+@if($statusMessage)
+    <div id="status-alert"
+         class="p-4 mb-4 text-sm rounded-lg transition-opacity duration-500 ease-out {{ $statusClass }}"
+         role="alert">
+        <span class="font-medium">
+            {{ $statusMessage }}
+        </span>
+    </div>
+@endif
     @php
         $completedTasks = $project->task->where('status_task', 'done')->count();
         $totalTasks = $project->task->count();

@@ -44,7 +44,7 @@ class TaskController extends Controller
         $task->update([
             'nama_task'=>$nama_task,
             'deadline_task'=>$deadline_task,
-            'id_proyek'=>$id_proyek,
+            // 'id_proyek'=>$id_proyek,
             ]);
             return redirect()->back()->with('success_update_task','Success to update task');
             

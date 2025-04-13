@@ -1,7 +1,7 @@
 <x-dashboard-layout>
   {{-- ALERTS --}}
   @if(session('success_update_status'))
-  <div id="status-alert" class="mt-5 p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
+  <div id="status-alert" class="mt-5 p-4 mb-4 text-sm text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-400" role="alert">
       <span class="font-medium">{{ session('success_update_status') }}</span>
   </div>
   @endif
@@ -118,13 +118,13 @@
                           <tr>
                               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $subtask->nama_sub_task }}</td>
                               <td class="px-6 py-4 whitespace-nowrap">
-                                  <form method="POST" action="/subtask/update-status">
+                                  <form method="POST" id="form-subtask" action="/subtask/update-status">
                                       @csrf
                                       <input type="hidden" name="id_subtask" value="{{ $subtask->id }}">
                                       <span onclick="toggleSelect('status-text-subtask-{{ $subtask->id }}','status-select-subtask-{{ $subtask->id }}')" id="status-text-subtask-{{ $subtask->id }}" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
                                           {{ $subtask->status_sub_task }}
                                       </span>
-                                      <select name="status_subtask" id="status-select-subtask-{{ $subtask->id }}" class="hidden text-sm rounded px-2 py-1 bg-white text-black" onchange="submitStatusForm(this.form)">
+                                      <select name="status_subtask" id="status-select-subtask-{{ $subtask->id }}" class="hidden text-sm rounded px-2 py-1 bg-white text-black" onchange="submitStatusForm('form-subtask')">
                                           <option value="pending" {{ $subtask->status_sub_task == 'pending' ? 'selected' : '' }}>Pending</option>
                                           <option value="completed" {{ $subtask->status_sub_task == 'completed' ? 'selected' : '' }}>Completed</option>
                                       </select>
@@ -154,7 +154,8 @@
           document.getElementById(selectId).focus();
       }
 
-      function submitStatusForm(form) {
+      function submitStatusForm(formId) {
+        const form = document.getElementById(formId)
           form.submit();
       }
 
