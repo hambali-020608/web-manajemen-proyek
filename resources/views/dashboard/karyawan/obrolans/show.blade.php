@@ -8,7 +8,7 @@
             
             <div class="divide-y divide-gray-100">
                 @foreach ($projects as $project)
-                <a href="/dashboard/chats/proyek/{{$proyek->id}}" class="block p-4 hover:bg-gray-50 transition-colors duration-150 {{ $project->id == $proyek->id ? 'bg-blue-50' : '' }}">
+                <a href="/dashboard/chats/proyek/{{$project->id}}" class="block p-4 hover:bg-gray-50 transition-colors duration-150 {{ $project->id == $proyek->id ? 'bg-blue-50' : '' }}">
                     <div class="flex justify-between items-start">
                         <div>
                             <h3 class="font-medium text-gray-900">{{ $project->nama_proyek }}</h3>
@@ -96,11 +96,6 @@
                     @csrf
                     <input type="hidden" value="{{$proyek->id}}" name="proyek_id">
                     
-                    <button type="button" class="p-2 text-gray-500 hover:text-gray-700 rounded-full hover:bg-gray-100">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
-                        </svg>
-                    </button>
                     
                     <div class="flex-grow relative">
                         <input type="text" name="message" placeholder="Ketik pesan..." class="w-full px-4 py-2 border border-gray-300 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500">

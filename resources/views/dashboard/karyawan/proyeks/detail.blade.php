@@ -35,7 +35,7 @@
         $totalTasks = $project->task->count();
         $progress = $totalTasks > 0 ? round(($completedTasks / $totalTasks) * 100) : 0;
         
-        $tukangs = $project->task->flatMap(function($task) {
+        $tukangsMember = $project->task->flatMap(function($task) {
             return $task->sub_task->pluck('tukang');
         })->filter()->unique('id');
     @endphp
@@ -318,7 +318,7 @@
                         <h2 class="text-lg font-semibold text-gray-800">Team Members</h2>
                     </div>
                     <div class="divide-y divide-gray-200">
-                        @forelse($tukangs as $member)
+                        @forelse($tukangsMember as $member)
                         <div class="px-6 py-4 flex items-center">
                             <img class="h-10 w-10 rounded-full mr-4" 
                                  src="https://ui-avatars.com/api/?name={{ urlencode($member->name) }}&background=random" 

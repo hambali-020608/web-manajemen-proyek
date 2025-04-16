@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('proyek_id')->constrained('proyeks')->onDelete('cascade'); // Tambahkan id_proyek
             $table->enum('status_confirmation',['pending','accepted','rejected'])->default('pending');
-            $table->text('detail');
+            $table->text('detail')->nullable();
             $table->timestamps();
         });
     }

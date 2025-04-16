@@ -71,8 +71,9 @@ class ProyekController extends Controller
     }
     public function show(Proyek $project){
         $proyeks= Proyek::all();
+        $tukangs = Tukang::all();
        
-        return view('dashboard.karyawan.proyeks.detail',compact('project','proyeks'));
+        return view('dashboard.karyawan.proyeks.detail',compact('project','proyeks','tukangs'));
 
         
     }
